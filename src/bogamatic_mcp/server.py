@@ -244,16 +244,7 @@ def send_whatsapp_notification(
     expediente: Annotated[str, Field(description="Case number")],
     caratula: Annotated[str, Field(description="Case title")],
 ) -> str:
-    phone_number = os.getenv("WHATSAPP_PHONE_NUMBER")
-    if not phone_number:
-        raise ValueError("WHATSAPP_PHONE_NUMBER environment variable must be set.")
-    webhook_secret = os.getenv("BOGAMATIC_WEBHOOK_SECRET")
-    if not webhook_secret:
-        raise ValueError("BOGAMATIC_WEBHOOK_SECRET environment variable must be set.")
-
     result = api.post("/sac/whatsapp/notify", {
-        "phoneNumber": phone_number,
-        "webhookSecret": webhook_secret,
         "destinatario": destinatario,
         "fecha": fecha,
         "tipoOperacion": tipoOperacion,

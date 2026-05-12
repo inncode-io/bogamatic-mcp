@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "bogamatic-sac-mcp"
-version = "0.1.0"
+version = "0.2.0"
 description = "MCP server for interacting with the Argentine judiciary system (SAC - Justicia Cordoba)"
 readme = "README.md"
 license = "MIT"
@@ -29,7 +29,7 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/gonarguello/bogamatic-mcp"
+Homepage = "https://github.com/inncode-io/bogamatic-mcp"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/bogamatic_mcp"]
