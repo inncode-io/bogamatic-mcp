@@ -1,0 +1,38 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "bogamatic-sac-mcp"
+version = "0.1.0"
+description = "MCP server for interacting with the Argentine judiciary system (SAC - Justicia Cordoba)"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [
+    { name = "Gonzalo Arguello", email = "gonarguello@gmail.com" },
+]
+keywords = ["mcp", "claude", "legal", "argentina", "judiciary"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Legal Industry",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+dependencies = [
+    "mcp>=1.12.1",
+    "requests>=2.32.0",
+    "pydantic>=2.7.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/gonarguello/bogamatic-mcp"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/bogamatic_mcp"]
+
+[project.scripts]
+bogamatic-sac-mcp = "bogamatic_mcp.server:main"
