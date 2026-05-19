@@ -49,7 +49,7 @@ def get_novedades_cedulas(
     description=(
         "Get the full detail of a specific cedula notification. Returns: matricula, destinatario, "
         "dependencia, numeroExpediente, caratula, fecha (dd/MM/yyyy), tipoOperacion, idOperacion, "
-        "textoOperacion (converted to Markdown), protocolo, and adjuntos[] (each with idFichero, nombreFichero)."
+        "textoOperacion (converted to Markdown), protocolo, and adjuntos[] (each with idFichero, nombre, datosExtra)."
     ),
 )
 def get_detalle_cedula(
@@ -63,8 +63,9 @@ def get_detalle_cedula(
     description=(
         "Get a complete summary of a cedula in a single call. Combines get_detalle_cedula + "
         "calcular_plazo into one response. Returns: destinatario, numeroExpediente, caratula, "
-        "dependencia, fecha, tipoOperacion, idOperacion, textoOperacion (Markdown), adjuntos[], "
-        "protocolo, and plazo (with fechaPlazo and diasSaltados). "
+        "dependencia, fecha, tipoOperacion, idOperacion, textoOperacion (Markdown), adjuntos[] "
+        "(each with idFichero, nombre, datosExtra), protocolo, and plazo (with fechaInicio, "
+        "fechaPlazo, diasHabilesContados, diasSaltados). "
         "Use this instead of calling get_detalle_cedula and calcular_plazo separately."
     ),
 )
@@ -233,7 +234,8 @@ def calcular_plazo(
 @mcp.tool(
     name="send_whatsapp_notification",
     description=(
-        "Send a WhatsApp notification about a new cedula. Most parameters come from "
+        "Send a WhatsApp notification about a new cedula. The phone number is resolved "
+        "automatically from the authenticated user's account. Most parameters come from "
         "get_novedades_cedulas, while destinatario comes from get_detalle_cedula."
     ),
 )
