@@ -74,7 +74,7 @@ if (-not (Test-Path $ConfigDir)) {
 
 $newServer = @{
     command = "uvx"
-    args = @("bogamatic-sac-mcp")
+    args = @("--python", "3.13", "bogamatic-sac-mcp")
     env = @{
         SAC_USERNAME = $SacUsername
         SAC_PASSWORD = $SacPassword
@@ -82,24 +82,29 @@ $newServer = @{
 }
 
 # Try to preserve existing config
-$config = @{}
+$existingJson = $null
 if (Test-Path $ConfigFile) {
     $raw = Get-Content $ConfigFile -Raw -ErrorAction SilentlyContinue
     if ($raw -and $raw.Trim().Length -gt 2) {
         try {
-            $config = $raw | ConvertFrom-Json -AsHashtable
+            $existingJson = $raw | ConvertFrom-Json
         } catch {
-            $config = @{}
+            $existingJson = $null
         }
     }
 }
 
-if (-not $config.ContainsKey("mcpServers")) {
-    $config["mcpServers"] = @{}
+if ($existingJson -and $existingJson.mcpServers) {
+    # Add or overwrite only the bogamatic-sac key
+    $existingJson.mcpServers | Add-Member -NotePropertyName "bogamatic-sac" -NotePropertyValue ([PSCustomObject]$newServer) -Force
+} elseif ($existingJson) {
+    $existingJson | Add-Member -NotePropertyName "mcpServers" -NotePropertyValue ([PSCustomObject]@{ "bogamatic-sac" = [PSCustomObject]$newServer }) -Force
+} else {
+    $existingJson = [PSCustomObject]@{ mcpServers = [PSCustomObject]@{ "bogamatic-sac" = [PSCustomObject]$newServer } }
 }
 
-$config["mcpServers"]["bogamatic-sac"] = $newServer
-$config | ConvertTo-Json -Depth 10 | Set-Content -Path $ConfigFile -Encoding UTF8
+$jsonOut = $existingJson | ConvertTo-Json -Depth 10
+[System.IO.File]::WriteAllText($ConfigFile, $jsonOut, [System.Text.UTF8Encoding]::new($false))
 
 Write-Host "  OK: Config escrito en $ConfigFile" -ForegroundColor Green
 
